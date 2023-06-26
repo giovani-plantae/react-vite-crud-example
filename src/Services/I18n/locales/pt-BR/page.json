@@ -1,6 +1,7 @@
 {
     "list": {
-        "title": "Listar Items"
+        "title": "Listar Items",
+        "empty": "Nenhum item encontrado"
     },
     "create": {
         "title": "Criar Item"

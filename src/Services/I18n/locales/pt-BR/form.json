@@ -8,5 +8,7 @@
             "label": "Imagem"
         }
     },
+    "edit": "Editar",
+    "remove": "Remover",
     "submit": "Enviar"
 }
