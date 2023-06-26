@@ -1,0 +1,12 @@
+{
+    "fields": {
+        "title": {
+            "label": "Title",
+            "placeholder": "Enter the title"
+        },
+        "image": {
+            "label": "Image"
+        }
+    },
+    "submit": "Submit"
+}

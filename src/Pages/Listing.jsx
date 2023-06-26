@@ -6,7 +6,7 @@ export default function Listing() {
     
     return (
         <div>
-            <h1>{t('page:list')}</h1>
+            <h1>{t('page:list.title')}</h1>
         </div>
     );
 }

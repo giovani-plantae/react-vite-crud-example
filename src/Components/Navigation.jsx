@@ -4,7 +4,6 @@ import { Container, Navbar, Nav } from 'react-bootstrap';
 import LanguageDropdown from './LanguageDropdown.jsx';
 
 export default function Navigation() {
-
     const { t } = useTranslation();
 
     return (
@@ -15,15 +14,15 @@ export default function Navigation() {
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbar" />
                 <Navbar.Collapse id="navbar">
-                    <Nav className="mr-auto">
-                        <Nav.Link as={NavLink} to="/list" activeclassname="active">
+                    <Nav>
+                        <Nav.Link as={NavLink} to="/list">
                             {t('menu:list-link')}
                         </Nav.Link>
-                        <Nav.Link as={NavLink} to="/create" activeclassname="active">
+                        <Nav.Link as={NavLink} to="/create">
                             {t('menu:create-link')}
                         </Nav.Link>
                     </Nav>
-                    <Nav>
+                    <Nav className="ms-auto">
                         <LanguageDropdown />
                     </Nav>
                 </Navbar.Collapse>

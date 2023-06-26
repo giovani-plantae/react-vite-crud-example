@@ -1,4 +1,8 @@
 {
-    "list": "List Page",
-    "create": "Create Page"
+    "list": {
+        "title": "List Items"
+    },
+    "create": {
+        "title": "Create Item"
+    }
 }

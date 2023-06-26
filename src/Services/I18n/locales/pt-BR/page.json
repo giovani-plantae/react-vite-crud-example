@@ -1,4 +1,8 @@
 {
-    "list": "Página de Listagem",
-    "create": "Página de Cadastro"
+    "list": {
+        "title": "Listar Items"
+    },
+    "create": {
+        "title": "Criar Item"
+    }
 }

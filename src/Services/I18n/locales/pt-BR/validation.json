@@ -1,0 +1,5 @@
+{
+    "required": "{{field}} é obrigatório",
+    "maxLength": "{{field}} deve ter no máximo {{maxLength}} caracteres",
+    "fileRequired": "{{field}} é obrigatório"
+}
