@@ -4,11 +4,63 @@ import { useTranslation } from 'react-i18next';
 
 export default function Registration() {
     const { t } = useTranslation();
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-    const onSubmit = (data) => {
-        console.log(data);
-    };
+    async function onSubmit(data) {
+
+        if(Object.keys(errors).length)
+            return;
+
+        const image = await getBase64ImagesFromFileList(data.image);
+
+        const newData = {
+            ...data,
+            image: image[0],
+            id: generateUniqueId(),
+            timestamp: Date.now(),
+        };
+
+        saveDataToLocalStorage(newData);
+        reset();
+    }
+
+    async function getBase64ImagesFromFileList(fileList) {
+        const promises = Array.from(fileList).map((file) => {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                    const base64Image = reader.result;
+                    resolve(base64Image);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        });
+
+        const base64Images = await Promise.all(promises);
+        return base64Images;
+    }
+
+
+    function generateUniqueId() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    function saveDataToLocalStorage(data) {
+
+        const { image, ...payload } = data;
+
+        const items = JSON.parse(localStorage.getItem('items')) || [];
+        items.push(payload);
+
+        localStorage.setItem('items', JSON.stringify(items));
+        localStorage.setItem(`image-${payload.id}`, image);
+    }
 
     return (
         <Container>
