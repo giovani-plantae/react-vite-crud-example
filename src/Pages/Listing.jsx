@@ -21,7 +21,7 @@ export default function Listing() {
         };
 
         fetchData();
-    }, [getAll]);
+    }, []);
 
     // Paginação
     const indexOfLastItem = currentPage * itemsPerPage;
