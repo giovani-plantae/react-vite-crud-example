@@ -1,25 +1,32 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Container, Row, Pagination } from 'react-bootstrap';
 import ItemCard from '../Components/ItemCard.jsx';
+import useIndexedDB from '../Services/DataBase/IndexedDBHook.js';
 
 export default function Listing() {
-
     const { t } = useTranslation();
 
     const [items, setItems] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(4);
 
+    const indexedDB = useIndexedDB('crud-example', 'items');
+    const { getAll } = indexedDB;
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getAll();
+            setItems(data);
+        };
+
+        fetchData();
+    }, [getAll]);
+
     // Paginação
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
-
-    useEffect(() => {
-        const storedItems = JSON.parse(localStorage.getItem('items')) || [];
-        setItems(storedItems);
-    }, []);
 
     function handlePageChange(pageNumber) {
         setCurrentPage(pageNumber);
@@ -38,31 +45,26 @@ export default function Listing() {
             <h1>{t('page:list.title')}</h1>
             {renderItemList(currentItems, handleEdit, handleRemove)}
             {renderPagination(items, itemsPerPage, currentPage, handlePageChange)}
-        </Container >
+        </Container>
     );
 }
 
 function renderItemList(items, handleEdit, handleRemove) {
-
     const { t } = useTranslation();
 
     if (!items.length)
-        return (
-            <p>{t('page:list.empty')}</p>
-        );
+        return <p>{t('page:list.empty')}</p>;
 
     return (
         <Row xs={1} sm={2} md={3} lg={4} xl={4} className="g-4">
             {items.map((item) => (
-                <ItemCard key={item.id} {...{item, handleEdit, handleRemove}} />
+                <ItemCard key={item.id} {...{ item, handleEdit, handleRemove }} />
             ))}
         </Row>
     );
 }
 
-
 function renderPagination(items, itemsPerPage, currentPage, handlePageChange) {
-
     if (items.length <= itemsPerPage) {
         return null;
     }

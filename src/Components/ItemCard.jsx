@@ -1,31 +1,27 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, Col, Button } from 'react-bootstrap';
 
 export default function ItemCard({ item, handleEdit, handleRemove }) {
-
     const { t } = useTranslation();
-    const [image, setImage] = useState(null);
-
-    async function getImageUrl(itemId) {
-
-        const base64Img = localStorage.getItem(`image-${itemId}`);
-
-        return fetch(base64Img)
-            .then(res => res.blob())
-            .then(blob => setImage(URL.createObjectURL(blob)));
-    }
+    const [imageUrl, setImageUrl] = useState(null);
 
     useEffect(() => {
-        getImageUrl(item.id);
-    }, []);
+
+        const imageURL = URL.createObjectURL(item.image);
+        setImageUrl(imageURL);
+
+        return () => {
+            URL.revokeObjectURL(imageURL);
+        };
+    }, [item.image]);
 
     return (
         <Col key={item.id}>
             <Card className="h-100">
                 <Card.Img
                     variant="top"
-                    src={image}
+                    src={imageUrl}
                     style={{
                         height: '200px',
                         width: '100%',

@@ -1,65 +1,31 @@
 import { useForm } from 'react-hook-form';
 import { Container, Button, Card, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import useIndexedDB from '../Services/DataBase/IndexedDBHook.js';
+
 
 export default function Registration() {
+
     const { t } = useTranslation();
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const { add } = useIndexedDB('crud-example', 'items');
 
     async function onSubmit(data) {
 
-        if(Object.keys(errors).length)
+        if (Object.keys(errors).length)
             return;
 
-        const image = await getBase64ImagesFromFileList(data.image);
-
-        const newData = {
+        const payload = {
             ...data,
-            image: image[0],
-            id: generateUniqueId(),
-            timestamp: Date.now(),
+            image: data.image[0],
+            timestamp: new Date(),
         };
 
-        saveDataToLocalStorage(newData);
+        add(payload)
+            .then(console.log)
+            .catch(console.error);
+
         reset();
-    }
-
-    async function getBase64ImagesFromFileList(fileList) {
-        const promises = Array.from(fileList).map((file) => {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-
-                reader.onload = () => {
-                    const base64Image = reader.result;
-                    resolve(base64Image);
-                };
-
-                reader.readAsDataURL(file);
-            });
-        });
-
-        const base64Images = await Promise.all(promises);
-        return base64Images;
-    }
-
-
-    function generateUniqueId() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-
-    function saveDataToLocalStorage(data) {
-
-        const { image, ...payload } = data;
-
-        const items = JSON.parse(localStorage.getItem('items')) || [];
-        items.push(payload);
-
-        localStorage.setItem('items', JSON.stringify(items));
-        localStorage.setItem(`image-${payload.id}`, image);
     }
 
     return (
